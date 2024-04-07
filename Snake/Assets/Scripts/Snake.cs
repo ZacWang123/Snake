@@ -6,7 +6,9 @@ using UnityEngine;
 public class Snake
 {
     public int SnakeLength;
-    public List<Positions> SnakePositions;
+    public List<Positions> Body;
+    public Positions Head;
+    public string Direction;
     public int Id
     {
         get;
@@ -14,17 +16,42 @@ public class Snake
 
     public Snake()
     {
-        SnakePositions = new List<Positions>();
+        Body = new List<Positions>();
         Id = 1;
+        Direction = "Right";
     }
 
     public void SpawnSnake()
     {
-        SnakePositions.Add(new Positions(1, 5));
+        Head = new Positions(1, 5);
     }
 
-    public List<Positions> GetPositions()
+    public void UpdateDirection(string newDirection)
     {
-        return SnakePositions;
+        Direction = newDirection;
+    }
+
+    public void UpdateHead()
+    {
+        switch (Direction)
+        {
+            case "Up":
+                Head.Row += 0;
+                Head.Col += 1;
+                break;
+            case "Down":
+                Head.Row += 0;
+                Head.Col += -1;
+                break;
+            case "Left":
+                Head.Row += -1;
+                Head.Col += 0;
+                break;
+            case "Right":
+                Head.Row += 1;
+                Head.Col += 0;
+                break;
+        }
+            
     }
 }

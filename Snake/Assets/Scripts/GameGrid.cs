@@ -62,4 +62,13 @@ public class GameGrid
     {
         Grid[row, col] = value;
     }
+
+    public bool WithinGrid(int row, int col)
+    {
+        if (row >= 0 && row < Rows && col >= 0 && col < Columns)
+        {
+            return true;
+        }
+        return false;
+    }
 }

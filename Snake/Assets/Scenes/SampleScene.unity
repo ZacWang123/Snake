@@ -247,6 +247,8 @@ MonoBehaviour:
   Cell: {fileID: 4620803405867182939, guid: 7c776eadb6b42394a8f2e347e2212677, type: 3}
   row: 15
   col: 15
+  time: 0
+  updateInterval: 0.5
 --- !u!4 &2030644684
 Transform:
   m_ObjectHideFlags: 0
