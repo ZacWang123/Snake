@@ -4,25 +4,26 @@ using System.Collections.Generic;
 using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
     public GameObject Cell;
     public GameGrid grid;
     public Snake snake;
-    public int row = 15;
-    public int col = 15;
+    public int Row = 15;
+    public int Col = 15;
+    public string lastDirection = "Right";
     private float time;
     private float updateInterval = 0.2f;
 
     void Start()
     {
-        grid = new GameGrid(row, col, Cell);
+        grid = new GameGrid(Row, Col, Cell);
         snake = new Snake();
         grid.DrawGrid();
         snake.SpawnSnake();
-        //snake.AddBody();
-        SnakeUpdate();
+        SpawnApple();
     }
 
     public void UpdateGrid(int row, int col, int value)
@@ -30,57 +31,125 @@ public class GameManager : MonoBehaviour
         grid.UpdateGrid(row, col, value);
     }
 
-    public void SnakeUpdate()
+    public void ResetSnakeCells()
     {
-        //Recet cells back to 0
         foreach (Positions SnakeCoordinate in snake.SnakePositions)
         {
             UpdateGrid(SnakeCoordinate.Row, SnakeCoordinate.Col, 0);
         }
+    }
 
-        //Move the Snake
-        Positions NewHead = snake.UpdateSnake();
-
-        //Check if new head is out of bounds or an apple
-
-
-
-
-
-        //Update cells to the snake
+    public void UpdateSnakeCells()
+    {
         foreach (Positions SnakeCoordinate in snake.SnakePositions)
         {
             UpdateGrid(SnakeCoordinate.Row, SnakeCoordinate.Col, snake.Id);
         }
     }
 
+    public void SnakeUpdate()
+    {
+        Positions NewHead = snake.NewHead();
+
+        ResetSnakeCells();
+
+        CheckHead(NewHead);
+
+        UpdateSnakeCells();
+    }
+
     public void CheckDirection()
     {
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            snake.UpdateDirection("Left");
+            if (lastDirection == "Up" || lastDirection == "Down")
+            {
+                snake.Direction = "Left";
+            }
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            snake.UpdateDirection("Right");
+            if (lastDirection == "Up" || lastDirection == "Down")
+            {
+                snake.Direction = "Right";
+            }
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            snake.UpdateDirection("Down");
+            if (lastDirection == "Left" || lastDirection == "Right")
+            {
+                snake.Direction = "Down";
+            }
         }
         else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            snake.UpdateDirection("Up");
+            if (lastDirection == "Left" || lastDirection == "Right")
+            {
+                snake.Direction = "Up";
+            }
         }
+    }
+
+    public void SpawnApple()
+    {
+        int row = Random.Range(0, Row);
+        int col = Random.Range(0, Col);
+        if (grid.GetGridCell(row, col) == 0)
+        {
+            grid.UpdateGrid(row, col, 2);
+        }
+        else 
+        {
+            SpawnApple();
+        }
+
+    }
+
+    public void CheckHead(Positions SnakeHead)
+    {
+        if (!grid.WithinGrid(SnakeHead.Row, SnakeHead.Col))
+        {
+            GameOver();
+        }
+
+        /**
+        if (snake.SnakePositions.Contains(SnakeHead)) 
+        {
+            print("asd");
+            GameOver();
+        }
+        **/
+
+        int GridValue = grid.GetGridCell(SnakeHead.Row, SnakeHead.Col);
+
+        switch (GridValue)
+        {
+            case 0:
+                snake.UpdateSnake(SnakeHead);
+                break;
+            case 1:
+                GameOver();
+                break;
+            case 2:
+                snake.AddBody(SnakeHead);
+                SpawnApple();
+                break;
+        }
+    }
+
+    public void GameOver()
+    {
+        Application.Quit();
     }
 
     void Update()
     {
+        CheckDirection();
         time += Time.deltaTime;
         grid.UpdateGridColour();
-        CheckDirection();
         if (time > updateInterval)
         {
+            lastDirection = snake.Direction;
             SnakeUpdate();
             time = 0f;
         }

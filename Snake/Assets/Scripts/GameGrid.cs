@@ -58,6 +58,11 @@ public class GameGrid
         }
     }
 
+    public int GetGridCell(int row, int col)
+    {
+        return Grid[row, col];
+    }
+
     public void UpdateGrid(int row, int col, int value)
     {
         Grid[row, col] = value;

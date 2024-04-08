@@ -27,45 +27,13 @@ public class Snake
         length += 1;  
     }
 
-    public void UpdateDirection(string newDirection)
+    public void AddBody(Positions head)
     {
-        switch (newDirection)
-        {
-            case "Up":
-                if (Direction == "Left" || Direction == "Right")
-                {
-                    Direction = newDirection;
-                }
-                break;
-            case "Down":
-                if (Direction == "Left" || Direction == "Right")
-                {
-                    Direction = newDirection;
-                }
-                break;
-            case "Left":
-                if (Direction == "Up" || Direction == "Down")
-                {
-                    Direction = newDirection;
-                }
-                break;
-            case "Right":
-                if (Direction == "Up" || Direction == "Down")
-                {
-                    Direction = newDirection;
-                }
-                break;
-        }
-    }
-
-    public void AddBody()
-    {
-        SnakePositions.Add(new Positions(0, 5));
-
+        SnakePositions.Insert(0, head);
         length += 1;
     }
 
-    public Positions UpdateSnake()
+    public Positions NewHead()
     {
         Positions Head = SnakePositions[0];
         Positions NewHead = new Positions(Head.Row, Head.Col);
@@ -84,14 +52,21 @@ public class Snake
                 NewHead.Row += 1;
                 break;
         }
+        return NewHead;
+    }
 
+    public void UpdateSnake(Positions head)
+    {
         for (int pos = length - 1; pos >= 1; pos--)
         {
             SnakePositions[pos] = SnakePositions[pos - 1];
         }
 
-        SnakePositions[0] = NewHead;
+        SnakePositions[0] = head;
+    }
 
-        return NewHead;
+    public Positions GetSnakeHead()
+    {
+        return SnakePositions[0];
     }
 }
