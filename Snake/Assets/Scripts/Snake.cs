@@ -6,9 +6,9 @@ using UnityEngine;
 public class Snake
 {
     public int SnakeLength;
-    public List<Positions> Body;
-    public Positions Head;
+    public List<Positions> SnakePositions;
     public string Direction;
+    public int length;
     public int Id
     {
         get;
@@ -16,42 +16,82 @@ public class Snake
 
     public Snake()
     {
-        Body = new List<Positions>();
+        SnakePositions = new List<Positions>();
         Id = 1;
         Direction = "Right";
     }
 
     public void SpawnSnake()
     {
-        Head = new Positions(1, 5);
+        SnakePositions.Add(new Positions(1, 5));
+        length += 1;  
     }
 
     public void UpdateDirection(string newDirection)
     {
-        Direction = newDirection;
+        switch (newDirection)
+        {
+            case "Up":
+                if (Direction == "Left" || Direction == "Right")
+                {
+                    Direction = newDirection;
+                }
+                break;
+            case "Down":
+                if (Direction == "Left" || Direction == "Right")
+                {
+                    Direction = newDirection;
+                }
+                break;
+            case "Left":
+                if (Direction == "Up" || Direction == "Down")
+                {
+                    Direction = newDirection;
+                }
+                break;
+            case "Right":
+                if (Direction == "Up" || Direction == "Down")
+                {
+                    Direction = newDirection;
+                }
+                break;
+        }
     }
 
-    public void UpdateHead()
+    public void AddBody()
     {
+        SnakePositions.Add(new Positions(0, 5));
+
+        length += 1;
+    }
+
+    public Positions UpdateSnake()
+    {
+        Positions Head = SnakePositions[0];
+        Positions NewHead = new Positions(Head.Row, Head.Col);
         switch (Direction)
         {
             case "Up":
-                Head.Row += 0;
-                Head.Col += 1;
+                NewHead.Col += 1;
                 break;
             case "Down":
-                Head.Row += 0;
-                Head.Col += -1;
+                NewHead.Col -= 1;
                 break;
             case "Left":
-                Head.Row += -1;
-                Head.Col += 0;
+                NewHead.Row -= 1;
                 break;
             case "Right":
-                Head.Row += 1;
-                Head.Col += 0;
+                NewHead.Row += 1;
                 break;
         }
-            
+
+        for (int pos = length - 1; pos >= 1; pos--)
+        {
+            SnakePositions[pos] = SnakePositions[pos - 1];
+        }
+
+        SnakePositions[0] = NewHead;
+
+        return NewHead;
     }
 }

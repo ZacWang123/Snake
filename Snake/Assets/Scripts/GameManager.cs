@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
         snake = new Snake();
         grid.DrawGrid();
         snake.SpawnSnake();
+        //snake.AddBody();
         SnakeUpdate();
     }
 
@@ -29,22 +30,28 @@ public class GameManager : MonoBehaviour
         grid.UpdateGrid(row, col, value);
     }
 
-
-    /**
-    public void snakeUpdate()
+    public void SnakeUpdate()
     {
-        foreach (Positions SnakeCoordinate in snake.GetPositions())
+        //Recet cells back to 0
+        foreach (Positions SnakeCoordinate in snake.SnakePositions)
+        {
+            UpdateGrid(SnakeCoordinate.Row, SnakeCoordinate.Col, 0);
+        }
+
+        //Move the Snake
+        Positions NewHead = snake.UpdateSnake();
+
+        //Check if new head is out of bounds or an apple
+
+
+
+
+
+        //Update cells to the snake
+        foreach (Positions SnakeCoordinate in snake.SnakePositions)
         {
             UpdateGrid(SnakeCoordinate.Row, SnakeCoordinate.Col, snake.Id);
         }
-    }
-    **/
-
-    public void SnakeUpdate()
-    {
-        UpdateGrid(snake.Head.Row, snake.Head.Col, 0);
-        snake.UpdateHead();
-        UpdateGrid(snake.Head.Row, snake.Head.Col, snake.Id);
     }
 
     public void CheckDirection()
