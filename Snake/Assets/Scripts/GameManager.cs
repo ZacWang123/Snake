@@ -47,15 +47,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void SnakeUpdate()
+    public bool SnakeUpdate()
     {
         Positions NewHead = snake.NewHead();
 
         ResetSnakeCells();
 
-        CheckHead(NewHead);
-
-        UpdateSnakeCells();
+        if (!CheckHead(NewHead)) {
+            return false;
+        };
+        return true; 
     }
 
     public void CheckDirection()
@@ -105,20 +106,21 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void CheckHead(Positions SnakeHead)
+    public bool CheckHead(Positions SnakeHead)
     {
         if (!grid.WithinGrid(SnakeHead.Row, SnakeHead.Col))
         {
             GameOver();
+            return false;
         }
 
-        /**
-        if (snake.SnakePositions.Contains(SnakeHead)) 
+        foreach (Positions SnakeCoordinate in snake.SnakePositions)
         {
-            print("asd");
-            GameOver();
+            if (SnakeCoordinate.Row == SnakeHead.Row && SnakeCoordinate.Col == SnakeHead.Col) {
+                GameOver();
+                return false;
+            }
         }
-        **/
 
         int GridValue = grid.GetGridCell(SnakeHead.Row, SnakeHead.Col);
 
@@ -129,17 +131,20 @@ public class GameManager : MonoBehaviour
                 break;
             case 1:
                 GameOver();
-                break;
+                return false;
             case 2:
                 snake.AddBody(SnakeHead);
                 SpawnApple();
                 break;
         }
+
+        return true; 
     }
 
     public void GameOver()
     {
-        Application.Quit();
+        print("Game Over");
+        this.enabled = false;
     }
 
     void Update()
@@ -151,6 +156,7 @@ public class GameManager : MonoBehaviour
         {
             lastDirection = snake.Direction;
             SnakeUpdate();
+            UpdateSnakeCells();
             time = 0f;
         }
     }
