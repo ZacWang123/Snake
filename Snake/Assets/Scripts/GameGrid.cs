@@ -27,7 +27,9 @@ public class GameGrid
             for (int cols = 0; cols < Columns; cols++)
             {
                 GameObject Cell = Object.Instantiate(GridCell, new Vector2(rows, cols), Quaternion.identity);
-                VisualGrid[rows, cols] = Cell.GetComponent<Renderer>();
+                Renderer CellObject = Cell.GetComponent<Renderer>();
+                CellObject.sortingOrder = 1;
+                VisualGrid[rows, cols] = CellObject;
             }
         }
     }
@@ -43,15 +45,20 @@ public class GameGrid
                 switch (Grid[rows, cols])
                 {
                     case 0:
-                        Cell.material.color = new Color(125, 125, 125);
+                        if ((rows + cols) % 2 == 0)
+                        {
+                            Cell.material.color = new Color32(104, 207, 67, 255);
+                        } else {
+                            Cell.material.color = new Color32(91, 168, 58, 255);
+                        }
                         break;
 
                     case 1:
-                        Cell.material.color = new Color(0, 255, 0);
+                        Cell.material.color = new Color32(51, 72, 227, 255);
                         break;
 
                     case 2:
-                        Cell.material.color = new Color(255, 0, 0);
+                        Cell.material.color = new Color32(255, 0, 0, 255);
                         break;
                 }
             }
