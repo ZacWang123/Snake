@@ -5,17 +5,20 @@ using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
     public GameObject Cell;
     public GameGrid grid;
     public Snake snake;
+    public TextMeshProUGUI AppleCount;
     public int Row = 15;
     public int Col = 15;
     public string lastDirection = "Right";
     private float time;
     private float updateInterval = 0.2f;
+    private int numApples;
 
     void Start()
     {
@@ -133,7 +136,10 @@ public class GameManager : MonoBehaviour
                 GameOver();
                 return false;
             case 2:
+                numApples += 1;
+                AppleCount.text = numApples.ToString();
                 snake.AddBody(SnakeHead);
+                UpdateSnakeCells();
                 SpawnApple();
                 break;
         }
