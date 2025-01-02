@@ -18,6 +18,17 @@ public class GameGrid
         GridCell = cell;
     }
 
+    public void ResetGrid()
+    {
+        for (int rows = 0; rows < Rows; rows++)
+        {
+            for (int cols = 0; cols < Columns; cols++)
+            {
+                Grid[rows, cols] = 0;
+            }
+        }
+    }
+
     public void DrawGrid()
     {
         VisualGrid = new Renderer[Rows, Columns];

@@ -73,7 +73,8 @@ public class Snake
     public void ResetSnake() 
     {
         SnakePositions = new List<Positions>();
+        length = 0;
+        Direction = "Right";
         SpawnSnake();
-
     }
 }

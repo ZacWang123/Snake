@@ -154,7 +154,28 @@ public class GameManager : MonoBehaviour
     {
         gameActive = false;
         gameOver.SetActive(true);
-        this.enabled = false;
+    }
+
+    public void RestartGame()
+    {
+        grid.ResetGrid();
+        snake.ResetSnake();
+        UpdateSnakeCells();
+        SpawnApple();
+        numApples = 0;
+        AppleCount.text = numApples.ToString();
+        gameOver.SetActive(false);
+        gameActive = true;
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
+
+        if (Application.isEditor)
+        {
+            UnityEditor.EditorApplication.isPlaying = false;
+        }
     }
 
     void Update()
