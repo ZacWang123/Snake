@@ -69,4 +69,11 @@ public class Snake
     {
         return SnakePositions[0];
     }
+
+    public void ResetSnake() 
+    {
+        SnakePositions = new List<Positions>();
+        SpawnSnake();
+
+    }
 }

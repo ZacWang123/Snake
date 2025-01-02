@@ -13,12 +13,14 @@ public class GameManager : MonoBehaviour
     public GameGrid grid;
     public Snake snake;
     public TextMeshProUGUI AppleCount;
+    public GameObject gameOver;
     public int Row = 15;
     public int Col = 15;
     public string lastDirection = "Right";
     private float time;
     private float updateInterval = 0.2f;
     private int numApples;
+    private bool gameActive = true;
 
     void Start()
     {
@@ -27,6 +29,7 @@ public class GameManager : MonoBehaviour
         grid.DrawGrid();
         snake.SpawnSnake();
         SpawnApple();
+        gameOver.SetActive(false);
     }
 
     public void UpdateGrid(int row, int col, int value)
@@ -149,21 +152,24 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        print("Game Over");
+        gameActive = false;
+        gameOver.SetActive(true);
         this.enabled = false;
     }
 
     void Update()
     {
-        CheckDirection();
-        time += Time.deltaTime;
-        grid.UpdateGridColour();
-        if (time > updateInterval)
-        {
-            lastDirection = snake.Direction;
-            SnakeUpdate();
-            UpdateSnakeCells();
-            time = 0f;
+        if (gameActive){
+            CheckDirection();
+            time += Time.deltaTime;
+            grid.UpdateGridColour();
+            if (time > updateInterval)
+            {
+                lastDirection = snake.Direction;
+                SnakeUpdate();
+                UpdateSnakeCells();
+                time = 0f;
+            } 
         }
     }
 }
